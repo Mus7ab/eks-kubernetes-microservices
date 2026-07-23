@@ -1,0 +1,12 @@
+# Terraform (will be added in later days)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+*.tfplan
+*.deb
+
+# OS/editor junk
+.DS_Store
+.vscode/
