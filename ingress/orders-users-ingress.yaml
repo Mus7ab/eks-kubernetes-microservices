@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: orders-users-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /orders
+            pathType: Prefix
+            backend:
+              service:
+                name: orders-release-orders-chart
+                port:
+                  number: 3000
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: users-release
+                port:
+                  number: 3000
