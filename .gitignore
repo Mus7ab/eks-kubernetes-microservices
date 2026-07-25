@@ -10,3 +10,6 @@
 # OS/editor junk
 .DS_Store
 .vscode/
+# Kubernetes secrets - never commit real credentials
+configs/*-secret.yaml
+!configs/*-secret.example.yaml

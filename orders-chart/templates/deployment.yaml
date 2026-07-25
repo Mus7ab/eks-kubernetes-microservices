@@ -44,6 +44,22 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-config
+                  key: APP_ENV
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: orders-config
+                  key: LOG_LEVEL
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: orders-secret
+                  key: API_KEY
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
