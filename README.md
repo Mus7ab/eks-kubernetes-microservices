@@ -55,7 +55,7 @@ E --> F[Helm Upgrade]
 F --> G[Amazon EKS]
 
 G --> H[Running Application]
----
+```
 
 ## 📸 Project Screenshots
 
