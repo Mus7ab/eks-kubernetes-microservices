@@ -6,7 +6,7 @@ app.get('/orders', (req, res) => {
   res.json({
     service: 'orders',
     hostname: require('os').hostname(),
-    message: 'Orders service is running (v3 - task def fix verified)'
+    message: 'Orders service is running (CI/CD to EKS verified) (v3 - task def fix verified)'
   });
 });
 
