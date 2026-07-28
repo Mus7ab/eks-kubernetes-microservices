@@ -1,0 +1,66 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/orders/**"
+      - "services/users/**"
+      - "orders-chart/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-2
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --region ap-south-2 --name project3-eks
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push orders image
+        working-directory: services/orders
+        run: |
+          docker build -t ${{ steps.ecr-login.outputs.registry }}/orders-service:${{ github.sha }} .
+          docker push ${{ steps.ecr-login.outputs.registry }}/orders-service:${{ github.sha }}
+
+      - name: Build and push users image
+        working-directory: services/users
+        run: |
+          docker build -t ${{ steps.ecr-login.outputs.registry }}/users-service:${{ github.sha }} .
+          docker push ${{ steps.ecr-login.outputs.registry }}/users-service:${{ github.sha }}
+
+      - name: Deploy orders via Helm
+        run: |
+          helm upgrade --install orders-release ./orders-chart \
+            --set image.repository=${{ steps.ecr-login.outputs.registry }}/orders-service \
+            --set image.tag=${{ github.sha }} \
+            --set image.pullPolicy=IfNotPresent \
+            --set resources.requests.cpu=100m \
+            --set resources.requests.memory=64Mi \
+            --set resources.limits.cpu=200m \
+            --set resources.limits.memory=128Mi
+
+      - name: Deploy users via Helm
+        run: |
+          helm upgrade --install users-release ./orders-chart \
+            --set image.repository=${{ steps.ecr-login.outputs.registry }}/users-service \
+            --set image.tag=${{ github.sha }} \
+            --set image.pullPolicy=IfNotPresent \
+            --set nameOverride=users-chart \
+            --set fullnameOverride=users-release \
+            --set resources.requests.cpu=100m \
+            --set resources.requests.memory=64Mi \
+            --set resources.limits.cpu=200m \
+            --set resources.limits.memory=128Mi
