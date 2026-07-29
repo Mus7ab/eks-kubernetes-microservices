@@ -25,7 +25,7 @@ A growing microservices platform needs to move beyond ECS Fargate (Project 2) to
 - NGINX Ingress
 - ConfigMaps
 - Secrets
-- AWS Load Balancer Controller
+- AWS Network Load Balancer (via NGINX Ingress Controller)
 
 ---
 
