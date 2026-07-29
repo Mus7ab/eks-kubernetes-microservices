@@ -55,7 +55,7 @@ E --> F[Helm Upgrade]
 F --> G[Amazon EKS]
 
 G --> H[Running Application]
----
+```
 
 ## 📸 Project Screenshots
 
@@ -103,26 +103,40 @@ Prometheus collects metrics from the Kubernetes cluster while Grafana visualizes
 
 ```
 eks-kubernetes-microservices/
-├── services/
-│   ├── orders/          # Dockerfile, app.js, package.json
-│   └── users/            # Dockerfile, app.js, package.json
-├── orders-chart/          # Shared Helm chart (used for both services)
-│   ├── templates/
-│   ├── values.yaml
-│   └── Chart.yaml
-├── ingress/
-│   └── orders-users-ingress.yaml
+├── .github/
+│   └── workflows/
+│       └── deploy-eks.yml
 ├── configs/
 │   ├── orders-configmap.yaml
-│   ├── orders-secret.example.yaml   # real orders-secret.yaml is gitignored
+│   └── orders-secret.example.yaml
+├── eks/
+│   └── cluster-config.yaml
 ├── hpa/
 │   └── orders-hpa.yaml
-├── eks/
-│   └── cluster-config.yaml          # eksctl cluster definition (OIDC enabled)
-├── .github/workflows/
-│   └── deploy-eks.yml
-├── kind-config.yaml                 # local cluster port-mapping config
-└── irsa-test-pod.yaml               # one-off IRSA verification pod
+├── images/
+│   ├── architecture.png
+│   └── screenshots/
+│       ├── aws-ecr.png
+│       ├── github-actions-success.png
+│       └── grafana-dashboard.png
+├── ingress/
+│   └── orders-users-ingress.yaml
+├── orders-chart/
+│   ├── templates/
+│   ├── Chart.yaml
+│   └── values.yaml
+├── services/
+│   ├── orders/
+│   │   ├── Dockerfile
+│   │   ├── app.js
+│   │   └── package.json
+│   └── users/
+│       ├── Dockerfile
+│       ├── app.js
+│       └── package.json
+├── kind-config.yaml
+├── irsa-test-pod.yaml
+└── README.md
 ```
 
 ---
